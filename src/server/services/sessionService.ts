@@ -43,8 +43,6 @@ export type SessionListItem = {
   projectRoot: string | null
   workDir: string | null
   workDirExists: boolean
-  sourceSessionId?: string
-  sourceMessageId?: string
 }
 
 export type DeleteSessionFailure = {
@@ -1329,20 +1327,6 @@ export class SessionService {
           }
         }
 
-        // Extract fork parent relationship from transcript entries
-        let sourceSessionId: string | undefined
-        let sourceMessageId: string | undefined
-        for (const e of entries) {
-          const fork = (e as Record<string, unknown>).forkedFrom as
-            | { sessionId?: string; messageUuid?: string }
-            | undefined
-          if (fork?.sessionId) {
-            sourceSessionId = fork.sessionId
-            sourceMessageId = fork.messageUuid
-            break
-          }
-        }
-
         return {
           id: sessionId,
           title,
@@ -1353,8 +1337,6 @@ export class SessionService {
           projectRoot,
           workDir,
           workDirExists,
-          sourceSessionId,
-          sourceMessageId,
         }
       } catch {
         // Skip unreadable files
